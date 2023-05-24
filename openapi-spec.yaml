@@ -1,0 +1,142 @@
+
+# Sample API Documentation
+# Follow common mark syntax for better visual representation
+# Important to include the version of the openapi used
+openapi: '3.0.3'
+
+# Provides the metadata corresponding to the API to be defined
+info:
+  title: Sample Book Management API Definition
+  description: Sample OpenAPI Specification for a **Book Management System**
+  version: '1.0'
+# List down all the base URLs
+servers:
+  - url: http://localhost:9000/
+    description: Main Server
+    
+# Describe the tags to be used to group API endpoints
+tags:
+  - name: Book Management
+    description: Managing book-related operations
+  
+# security:
+#   - BearerAuth: []
+#   - ApiKeyAuth: []  
+  
+# Mandatory element to define the routes to which requests will be directed
+paths: 
+  /books:
+    get:
+      tags:
+        - Book Management
+      summary: List all the available books
+      description: Returns the list of book objects
+      responses:
+        '200':
+          description: List of categories
+          # Describe the content structure
+          content: 
+            application/json:
+              # Describe the content that we will return in the response
+              schema:
+                type: array
+                # Since we have defined the return type to be an array, we need to specify each item
+                items:
+                  $ref: "#/components/schemas/Book"
+    post:
+      tags:
+        - Book Management
+      summary: Add a new book
+      description: Post book details onto the server
+      # Define the request body
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Book"
+      responses:
+        '200':
+          description: Book details updated successfully!
+        '201':
+          description: New book added successfully!
+    put:
+      tags:
+        - Book Management
+      summary: Update a book
+      description: Update book details onto the server
+      # Define the request body
+      requestBody:
+        content:
+          application/json:
+            schema:
+                  $ref: "#/components/schemas/Book"
+      responses:
+        # No need of returning any ID
+        '200':
+          description: Book details updated successfully! 
+        '304':
+          description: Book not found!
+  /books/{bookName}:
+    get:
+      tags:
+        - Book Management
+      summary: List the book pointed to by bookName
+      description: Returns a Book object
+      parameters:
+        - name: bookName
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "Harry Potter: Goblet of Fire"
+      responses:
+        '200':
+          description: A particular category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+    delete:
+      tags:
+        - Book Management
+      summary: Delete a book
+      description: Delete book details from the server!
+      # No request body associated with the DELETE request
+      # However, we need to send a orderId for deletion
+      parameters:
+        - name: bookName
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "Harry Potter: Goblet of Fire"
+      responses:
+        '200':
+          description: Book details deleted successfully!
+        '400':
+          description: Book couldn't be located on the server!
+
+
+# Reusing schema definitions via components
+components:
+  schemas:
+      Book:
+        type: object
+        properties:
+          name: 
+            type: string
+          author:
+            type: string
+          content:
+            type: string
+          numPages:
+            type: integer
+  # securitySchemes:
+  #   BearerAuth:
+  #     type: http
+  #     scheme: bearer
+  #     bearerFormat: JWT
+  #   ApiKeyAuth:
+  #     type: apiKey
+  #     in: header
+  #     name: X-API-KEY 
