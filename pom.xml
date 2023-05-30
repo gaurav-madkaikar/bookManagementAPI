@@ -151,6 +151,24 @@
       <version>1.12.5</version>
       <scope>test</scope>
     </dependency>
+
+    <!--  Swagger dependencies  -->
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+      <version>2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-jaxrs2</artifactId>
+      <version>2.2.10</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -242,6 +260,31 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- Swagger maven plugin -->
+      <plugin>
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-maven-plugin</artifactId>
+        <version>2.2.10</version>
+        <configuration>
+          <outputFileName>openapi</outputFileName>
+          <outputPath>${project.build.directory}/generatedtest</outputPath>
+          <outputFormat>JSONANDYAML</outputFormat>
+          <resourcePackages>
+            <package>org.example</package>
+          </resourcePackages>
+          <prettyPrint>TRUE</prettyPrint>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>resolve</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 

@@ -1,0 +1,234 @@
+openapi: 3.0.1
+info:
+  title: Sample book management API
+  description: Sample OpenAPI Specification for a Book Management System
+  contact:
+    name: Gaurav
+    url: http://github.com/gaurav-madkaikar
+    email: gmadkaikar@iitkgp.ac.in
+  version: "1.0"
+servers:
+- url: http://localhost:9000/
+  description: Main Server
+  variables: {}
+tags:
+- name: Book Management
+  description: Managing book-related operations
+paths:
+  /books:
+    get:
+      tags:
+      - Book Management
+      summary: List all the available books
+      description: Returns the list of all book objects
+      operationId: getListofBooks
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RoutingContext'
+      responses:
+        "200":
+          description: List of books returned successfully!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      tags:
+      - Book Management
+      summary: Add a new book
+      description: Post book details onto the server
+      operationId: handleInsert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      responses:
+        "200":
+          description: Book details updated successfully!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        "201":
+          description: New book added successfully!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+  /books/{bookName}:
+    get:
+      tags:
+      - Book Management
+      summary: List the book pointed to by bookName
+      description: Returns a Book object
+      operationId: handleGetBook
+      parameters:
+      - name: bookName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RoutingContext'
+      responses:
+        "200":
+          description: A particular category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    put:
+      tags:
+      - Book Management
+      summary: Update a book
+      description: Update book details onto the server
+      operationId: handleUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+          application/text:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      responses:
+        "200":
+          description: List of books returned successfully!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    delete:
+      tags:
+      - Book Management
+      summary: Delete a book
+      description: Delete book details from the server!
+      operationId: handleDelete
+      parameters:
+      - name: bookName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RoutingContext'
+      responses:
+        "200":
+          description: Book details deleted successfully!
+        "400":
+          description: Book couldn't be located on the server!
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        name:
+          type: string
+        author:
+          type: string
+        content:
+          type: string
+        numPages:
+          type: integer
+          format: int32
+    AuthProvider:
+      type: object
+    Buffer:
+      type: object
+      properties:
+        bytes:
+          type: array
+          items:
+            type: string
+            format: byte
+        byteBuf:
+          $ref: '#/components/schemas/ByteBuf'
+    ByteBuf:
+      type: object
+      properties:
+        direct:
+          type: boolean
+        readOnly:
+          type: boolean
+        readable:
+          type: boolean
+        writable:
+          type: boolean
+        contiguous:
+          type: boolean
+    JsonArray:
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            type: object
+        empty:
+          type: boolean
+        "null":
+          $ref: '#/components/schemas/JsonArray'
+    JsonObject:
+      type: object
+      properties:
+        map:
+          type: object
+          additionalProperties:
+            type: object
+        empty:
+          type: boolean
+    RoutingContext:
+      type: object
+      properties:
+        bodyAsString:
+          type: string
+        bodyAsJson:
+          $ref: '#/components/schemas/JsonObject'
+        bodyAsJsonArray:
+          $ref: '#/components/schemas/JsonArray'
+        sessionAccessed:
+          type: boolean
+        acceptableContentType:
+          type: string
+        body:
+          $ref: '#/components/schemas/Buffer'
+        user:
+          $ref: '#/components/schemas/User'
+        fresh:
+          type: boolean
+        session:
+          $ref: '#/components/schemas/Session'
+    Session:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        destroyed:
+          type: boolean
+        regenerated:
+          type: boolean
+    User:
+      type: object
+      properties:
+        authProvider:
+          $ref: '#/components/schemas/AuthProvider'
